@@ -1,0 +1,11 @@
+# Announcer config
+first_join: Welcome, %name%!
+regular_join: ''
+announcements:
+- permission: '*'
+  offset: 0
+  interval: 4800
+  random: false
+  messages:
+  - Message 1
+  - Message 2

@@ -1,0 +1,16 @@
+name: Announcer
+main: com.chromaclypse.announcer.Announcer
+version: ${project.version}
+description: Server enforced spam
+author: ezeiger92
+api-version: 1.13
+depend: [ChromaLib]
+commands:
+  announcer:
+    description: Root Announcer command
+    usage: /<command> reload
+    permission: announcer.reload
+permissions:
+  announcer.reload:
+    description: Reload perm
+    default: op
