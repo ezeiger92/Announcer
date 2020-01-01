@@ -6,10 +6,11 @@ import java.util.Random;
 
 import com.chromaclypse.api.Defaults;
 import com.chromaclypse.api.Log;
+import com.chromaclypse.api.command.CommandBase;
+import com.chromaclypse.api.command.Context;
 import com.chromaclypse.api.messages.Text;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -31,7 +32,14 @@ public class Announcer extends JavaPlugin implements Listener {
 
 	@Override
 	public void onEnable() {
-		getCommand("announcer").setExecutor(this);
+		TabExecutor ano = new CommandBase()
+				.calls(this::helpCommand)
+				.with().arg("reload").calls(this::reloadCommand)
+				.with().arg("version").calls(CommandBase::pluginVersion)
+				.getCommand();
+		
+		getCommand("announcer").setExecutor(ano);
+		getCommand("announcer").setTabCompleter(ano);
 		getServer().getPluginManager().registerEvents(this, this);
 		startup();
 	}
@@ -79,25 +87,15 @@ public class Announcer extends JavaPlugin implements Listener {
 			announcement.offset, announcement.interval));
 		}
 	}
-
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String alias, String[] parameters) {
-
-		if(parameters.length == 0) {
-			sender.sendMessage("Announcer: /"+alias+" reload");
-		}
-		else {
-			switch(parameters[0]) {
-				case "reload":
-					startup();
-					sender.sendMessage("Announcer: Reloaded config!");
-					break;
-
-				default:
-					sender.sendMessage("Announcer: /"+alias+" reload");
-					break;
-			}
-		}
+	
+	private boolean helpCommand(Context context) {
+		context.Sender().sendMessage("Announcer: /"+context.Alias()+" reload");
+		return true;
+	}
+	
+	private boolean reloadCommand(Context context) {
+		startup();
+		context.Sender().sendMessage("Announcer: Reloaded config!");
 		return true;
 	}
 
